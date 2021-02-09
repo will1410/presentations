@@ -1,4 +1,4 @@
-\#Item Dashboard report
+#Item Dashboard report
 
 ##How to create the item dashboard report
 
