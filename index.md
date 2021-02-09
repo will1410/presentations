@@ -1,4 +1,4 @@
-# Presentations
+# Presentations, notes, and other stuff
 
 Presentations by George H. Williams
 
