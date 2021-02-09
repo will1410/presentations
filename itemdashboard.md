@@ -1,15 +1,15 @@
-#Item Dashboard report
+# Item Dashboard report
 
-##How to create the item dashboard report
+## How to create the item dashboard report
 
-The SQL for this report is kind of crazy:
+The SQL for this report is kind of a lot:
 
 <details>
   <summary>SQL for Item dashboard</summary>
 
   <p>
 
-    ~~~SQL
+    <pre>
 
       SELECT
         Concat_Ws('<br />',
@@ -223,7 +223,7 @@ The SQL for this report is kind of crazy:
       GROUP BY
         deleteditems.itemnumber
 
-    ~~~
+    </pre>
 
   </p>
 
