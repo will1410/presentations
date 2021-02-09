@@ -6,6 +6,7 @@ The SQL for this report is kind of crazy:
   <summary>Click to expand</summary>
 
      ~~~SQL
+
        SELECT
         Concat_Ws('<br />',
           '<h3 style="color: white; background-color: #829356; text-align: center;">This item is currently in the catalog</h3>',
@@ -217,6 +218,11 @@ The SQL for this report is kind of crazy:
         deleteditems.barcode LIKE Concat("%", @brcd, "%")
       GROUP BY
         deleteditems.itemnumber
+        
     ~~~
-    
+
   </details>
+
+Yes.  I know.  It's a big report.  It's got a lot going on in it.
+
+Here's what it does:
