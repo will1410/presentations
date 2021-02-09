@@ -374,7 +374,7 @@ Yes.  I know.  It's a big report.  It's got a lot going on in it.
 
 Here's what it does:
 
-If you enter an item barcode number and that barcode number is in items.barcode or deleteditems.barcode, you will get a result that list pertinent information about the item in a format that's easy to cut-and-paste into a document or an e-mail.
+If you enter an item barcode number and that barcode number is in items.barcode or deleteditems.barcode, you will get a result that lists pertinent information about the item in a format that's easy to cut-and-paste into a document or an e-mail.
 
 If the item has not been deleted, you'll get links to the item record, the bibliographic record, and 5 other reports.  A report for circulation history, a report for action log history, a report for the item's in-transit history, and reports for the title's request history and the item's request history.
 
@@ -390,4 +390,248 @@ I wrote this report to be a one-stop-shop for an item barcode number search.  If
 
 With this report, I can scan the barcode number once and if the barcode number is still active or has been deleted within the last 13 months, I get a result.  I don't have to run separate reports for deleted and non-deleted items.
 
-If the item is still active, I can easily copy and paste item information into an e-mail, go to more specific item data, or run reports
+If the item is still active, I can easily copy and paste item information into an e-mail, go to more specific item data, or run reports about circulation history, action log history, in transit history, or the item's request history.  And if it's been deleted within the last 13 months, I get a result that I can easily copy and past into an e-mail and a link to references in the accountlines notes and descriptions where the barcode number can be found.  And if it was deleted more than 13 months ago, I get no result.  In short, this report puts 90% of the things I need for answering questions about items into 1 spot.
+
+----------
+
+So, in order to help others understand how this report was built, I'm going to walk through all of the steps I took to build it, one step at a time.
+
+## Step 1
+
+I started with a report that looks at basic item information from the items and biblio table.
+
+~~~SQL
+
+SELECT
+  items.homebranch,
+  items.holdingbranch,
+  items.permanent_location,
+  items.location,
+  items.itype,
+  items.ccode,
+  items.itemcallnumber,
+  biblio.author,
+  biblio.title,
+  items.barcode,
+  items.itemnotes,
+  items.itemnotes_nonpublic,
+  items.issues,
+  items.renewals,
+  items.dateaccessioned,
+  items.datelastborrowed,
+  items.datelastseen,
+  items.timestamp,
+  items.onloan,
+  items.notforloan,
+  items.damaged,
+  items.damaged_on,
+  items.itemlost,
+  items.itemlost_on,
+  items.withdrawn,
+  items.withdrawn_on
+FROM
+  items JOIN
+  biblio ON items.biblionumber = biblio.biblionumber
+WHERE
+  items.barcode LIKE CONCAT('%', <<Enter item barcode>>, '%')
+GROUP BY
+  items.itemnumber,
+  biblio.biblionumber
+
+~~~
+
+This report gets me the basic information I want for an item that is still in the system, but I really want something I can cut and paste into an e-mail that's easy to read and that will make as much sense to a brand new employee who's straight out of high school as to a library director with a Masters degreen and 35 years of experience.  
+
+----------
+
+So my next step is to add some sub-queries that will convert some of the database codes into real speech (i.e. instead of item type = "NVIDEO" staff will item type = "Video"; instead of itemlost = 2, staff will see itemlost = "Lost (more than 45 days overdue)."
+
+If you don't know how to create sub-queries, please check out the video: [SQL: Dates and Subqueries](https://youtu.be/iRBEvt4nDbU)
+
+As a first sub-query example, this next sample code includes just a sub-query for getting the collection code description instead of just the collection code authorised value:
+
+~~~SQL
+
+SELECT
+  items.homebranch,
+  items.holdingbranch,
+  items.permanent_location,
+  items.location,
+  items.itype,
+  ccodes.lib AS CCODE,
+  items.itemcallnumber,
+  biblio.author,
+  biblio.title,
+  items.barcode,
+  items.itemnotes,
+  items.itemnotes_nonpublic,
+  items.issues,
+  items.renewals,
+  items.dateaccessioned,
+  items.datelastborrowed,
+  items.datelastseen,
+  items.timestamp,
+  items.onloan,
+  items.notforloan,
+  items.damaged,
+  items.damaged_on,
+  items.itemlost,
+  items.itemlost_on,
+  items.withdrawn,
+  items.withdrawn_on
+FROM
+  items JOIN
+  biblio ON items.biblionumber = biblio.biblionumber LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'ccode') ccodes ON ccodes.authorised_value =
+      items.ccode
+WHERE
+  items.barcode LIKE CONCAT('%', <<Enter item barcode>>, '%')
+GROUP BY
+  items.itemnumber,
+  biblio.biblionumber
+
+~~~
+
+What this sub-query does is run a separate query:
+
+~~~SQL
+
+SELECT
+    authorised_values.category,
+    authorised_values.authorised_value,
+    authorised_values.lib
+  FROM
+    authorised_values
+  WHERE
+    authorised_values.category = 'ccode'
+
+~~~
+
+Which gets a list of all of the collection codes in your system.  By left-joining it to the items table, I'm telling the report to grab the collection code description (if there is one) and use it instead of items.ccode which displays the collection code authorised value.  The description is usually a lot easier to read for inexperienced staff than the authorised value.
+
+----------
+
+That sample should get you a good idea of how to use a sub-query, so this next sample includes all of the fields where I want to use a sub-query instead of just a code:
+
+~~~SQL
+
+SELECT
+  items.homebranch,
+  items.holdingbranch,
+  permanent_locss.lib AS PERM_LOCATION,
+  locss.lib AS LOCATION,
+  itemtypess.description AS ITYPE,
+  ccodes.lib AS CCODE,
+  items.itemcallnumber,
+  biblio.author,
+  biblio.title,
+  items.barcode,
+  items.itemnotes,
+  items.itemnotes_nonpublic,
+  items.issues,
+  items.renewals,
+  items.dateaccessioned,
+  items.datelastborrowed,
+  items.datelastseen,
+  items.timestamp,
+  items.onloan,
+  notforloans.lib,
+  damageds.lib AS lib1,
+  items.damaged_on,
+  losts.lib AS lib2,
+  items.itemlost_on,
+  withdrawns.lib AS lib3,
+  items.withdrawn_on
+FROM
+  items JOIN
+  biblio ON items.biblionumber = biblio.biblionumber LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOC') permanent_locss ON
+      permanent_locss.authorised_value = items.permanent_location LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOC') locss ON locss.authorised_value =
+      items.location LEFT JOIN
+  (SELECT
+      itemtypes.itemtype,
+      itemtypes.description
+    FROM
+      itemtypes) itemtypess ON itemtypess.itemtype = items.itype LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'CCODE') ccodes ON ccodes.authorised_value =
+      items.ccode LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'NOT_LOAN') notforloans ON
+      notforloans.authorised_value = items.notforloan LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'DAMAGED') damageds ON
+      damageds.authorised_value = items.damaged LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOST') losts ON losts.authorised_value =
+      items.itemlost LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'WITHDRAWN') withdrawns ON
+      withdrawns.authorised_value = items.withdrawn
+WHERE
+  items.barcode LIKE CONCAT('%', <<Enter item barcode>>, '%')
+GROUP BY
+  notforloans.lib,
+  damageds.lib,
+  losts.lib,
+  withdrawns.lib,
+  items.itemnumber,
+  biblio.biblionumber
+
+~~~
+
+An important thing to remember here is that I want all of these joins to be LEFT JOIN s.  This way if an item doesn't have a "Lost" status, you'll still get a result.  If you do a simple JOIN, and there is no result in the sub-query, you won't get any result at all.
+
+----------
