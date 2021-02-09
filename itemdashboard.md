@@ -4,6 +4,8 @@
 
 The SQL for this report is kind of a lot:
 
+<mark>(Warning - if you copy and paste this report directly into your system - it will not work until you create the accessory reports and edit this SQL with the correct report numbers)</mark>
+
 ~~~SQL
 
 SELECT
@@ -366,6 +368,8 @@ GROUP BY
 
 ~~~
 
+<mark>(Warning - if you copy and paste this report directly into your system - it will not work until you create the accessory reports and edit this SQL with the correct report numbers)</mark>
+
 Yes.  I know.  It's a big report.  It's got a lot going on in it.
 
 Here's what it does:
@@ -378,4 +382,12 @@ If the item has been deleted, you'll get a link to the bibliographic record (unl
 
 Here's why it does all of this:
 
-I manage a Koha that is shared by 51 libraries and uses a courier service to move materials across
+I manage a Koha that is shared by 51 libraries and uses a courier service to move materials across 7400 square miles of north east Kansas.  Of these 51 libraries, the smallest serves a community of less than 200 and the largest serves a community of over 35,000.  The number of staff as well as their experience and education varies from library to library.  It is not uncommon for me to receive phone calls or e-mails saying, "I have an item with barcode number X.  I need to know more about it."
+
+I can use Koha to find out a ton of things about an item.  I can tell you where it's been and when it was there.  I can tell you if it's still active in the system or if it's been deleted within the last 13 months (we run a script that purges the deleted items table of records that have been in deleteditems for more than 13 months).  I can tell you its circulation history, its requset history, and other things with just the barcode number.  But I have to go to a bunch of different places to find these things out.
+
+I wrote this report to be a one-stop-shop for an item barcode number search.  If I get an e-mail saying "I have this barcode number and when I scan it I get __ happens.  Why does __ happen."
+
+With this report, I can scan the barcode number once and if the barcode number is still active or has been deleted within the last 13 months, I get a result.  I don't have to run separate reports for deleted and non-deleted items.
+
+If the item is still active, I can easily copy and paste item information into an e-mail, go to more specific item data, or run reports
