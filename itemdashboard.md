@@ -4,12 +4,7 @@
 
 The SQL for this report is kind of a lot:
 
-<details>
-  <summary>SQL for Item dashboard</summary>
-
-  <p>
-
-    <pre>
+~~~SQL
 
       SELECT
         Concat_Ws('<br />',
@@ -223,11 +218,7 @@ The SQL for this report is kind of a lot:
       GROUP BY
         deleteditems.itemnumber
 
-    </pre>
-
-  </p>
-
-</details>
+~~~
 
 Yes.  I know.  It's a big report.  It's got a lot going on in it.
 
