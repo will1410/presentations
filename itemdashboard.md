@@ -442,9 +442,9 @@ GROUP BY
 
 This report gets me the basic information I want for an item that is still in the system, but I really want something I can cut and paste into an e-mail that's easy to read and that will make as much sense to a brand new employee who's straight out of high school as to a library director with a Masters degreen and 35 years of experience.  
 
-----------
+## Step 2
 
-So my next step is to add some sub-queries that will convert some of the database codes into real speech (i.e. instead of item type = "NVIDEO" staff will item type = "Video"; instead of itemlost = 2, staff will see itemlost = "Lost (more than 45 days overdue)."
+My next step is to add some sub-queries that will convert some of the codes into descriptions (i.e. instead of item type = "NVIDEO" staff will item type = "Video"; instead of itemlost = 2, staff will see itemlost = "Lost (more than 45 days overdue)."
 
 If you don't know how to create sub-queries, please check out the video: [SQL: Dates and Subqueries](https://youtu.be/iRBEvt4nDbU)
 
@@ -634,4 +634,4 @@ GROUP BY
 
 An important thing to remember here is that I want all of these joins to be LEFT JOIN s.  This way if an item doesn't have a "Lost" status, you'll still get a result.  If you do a simple JOIN, and there is no result in the sub-query, you won't get any result at all.
 
-----------
+## Step 4
