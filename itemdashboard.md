@@ -1,7 +1,9 @@
 #Item Dashboard report
 
-The SQL for this report is:
+The SQL for this report is kind of crazy:
 
+<details>
+  <summary>Click to expand</summary>
 ~~~SQL
  SELECT
   Concat_Ws('<br />',
@@ -215,3 +217,4 @@ WHERE
 GROUP BY
   deleteditems.itemnumber
 ~~~
+</details>
