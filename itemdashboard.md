@@ -2,7 +2,8 @@
 
 The SQL for this report is:
 
-> SELECT
+~~~SQL
+ SELECT
   Concat_Ws('<br />',
     '<h3 style="color: white; background-color: #829356; text-align: center;">This item is currently in the catalog</h3>',
     Concat('Item homebranch: ', items.homebranch),
@@ -213,3 +214,4 @@ WHERE
   deleteditems.barcode LIKE Concat("%", @brcd, "%")
 GROUP BY
   deleteditems.itemnumber
+~~~
