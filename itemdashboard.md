@@ -1,5 +1,7 @@
 \#Item Dashboard report
 
+##How to create the item dashboard report
+
 The SQL for this report is kind of crazy:
 
 <details>
