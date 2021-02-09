@@ -7,8 +7,10 @@ The SQL for this report is kind of crazy:
 <details>
   <summary>SQL for Item dashboard</summary>
 
+  <p>
+
     ~~~SQL
-    
+
       SELECT
         Concat_Ws('<br />',
           '<h3 style="color: white; background-color: #829356; text-align: center;">This item is currently in the catalog</h3>',
@@ -222,6 +224,8 @@ The SQL for this report is kind of crazy:
         deleteditems.itemnumber
 
     ~~~
+
+  </p>
 
 </details>
 
