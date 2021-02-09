@@ -137,7 +137,7 @@ The SQL for this report is kind of crazy:
         ) issuesi
           ON items.itemnumber = issuesi.itemnumber
       WHERE
-        items.barcode LIKE Concat("%", @brcd := <<Enter barcode number>> COLLATE utf8mb4_unicode_ci, "%")
+        items.barcode LIKE Concat("%", <<Enter barcode number>>, "%")
       GROUP BY
         items.itemnumber
       UNION
@@ -215,10 +215,10 @@ The SQL for this report is kind of crazy:
         ) deletedwithdrawni
           ON deletedwithdrawni.authorised_value = deleteditems.withdrawn
       WHERE
-        deleteditems.barcode LIKE Concat("%", @brcd, "%")
+        deleteditems.barcode LIKE Concat("%", <<Enter barcode number>>, "%")
       GROUP BY
         deleteditems.itemnumber
-        
+
     ~~~
 
   </details>
@@ -226,3 +226,13 @@ The SQL for this report is kind of crazy:
 Yes.  I know.  It's a big report.  It's got a lot going on in it.
 
 Here's what it does:
+
+If you enter an item barcode number and that barcode number is in items.barcode or deleteditems.barcode, you will get a result that list pertinent information about the item in a format that's easy to cut-and-paste into a document or an e-mail.
+
+If the item has not been deleted, you'll get links to the item record, the bibliographic record, and 5 other reports.  A report for circulation history, a report for action log history, a report for the item's in-transit history, and reports for the title's request history and the item's request history.
+
+If the item has been deleted, you'll get a link to the bibliographic record (unless the biblio has also been deleted) and a link to a report that will show you any accountlines where the item barcode number appears in the accountline description or note fields.
+
+Here's why it does all of this:
+
+I manage a Koha that is shared by 51 libraries and uses a courier service to move materials across
