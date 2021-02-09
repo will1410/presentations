@@ -4,6 +4,7 @@ The SQL for this report is kind of crazy:
 
 <details>
   <summary>Click to expand</summary>
+
      ~~~SQL
        SELECT
         Concat_Ws('<br />',
@@ -217,4 +218,5 @@ The SQL for this report is kind of crazy:
       GROUP BY
         deleteditems.itemnumber
     ~~~
+    
   </details>
