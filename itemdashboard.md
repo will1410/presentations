@@ -446,7 +446,7 @@ This report gets me the basic information I want for an item that is still in th
 
 My next step is to add some sub-queries that will convert some of the codes into descriptions (i.e. instead of item type = "NVIDEO" staff will item type = "Video"; instead of itemlost = 2, staff will see itemlost = "Lost (more than 45 days overdue)."
 
-If you don't know how to create sub-queries, please check out the video: [SQL: Dates and Subqueries](https://youtu.be/iRBEvt4nDbU)
+If you don't know how to create sub-queries, please check out the video: <a href="https://youtu.be/iRBEvt4nDbU" target="_blank">SQL: Dates and Subqueries</a>
 
 As a first sub-query example, this next sample code includes just a sub-query for getting the collection code description instead of just the collection code authorised value:
 
