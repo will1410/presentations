@@ -1196,7 +1196,7 @@ For example, to run my "Item action log history" report you need to concatenate:
 
 >"<a href='/cgi-bin/koha/reports/guided_reports.pl?reports=3342&phase=Run+this+report&param_name=Enter+item+number&sql_params="
 
->to start the URL along with the itemnumber from the database along with:
+to start the URL along with the itemnumber from the database followed by:
 
 >"' target='_blank'>see action log history</a>"
 
@@ -1207,11 +1207,12 @@ In this case the item number fills in the run time parameter the report is askin
 Generally speaking, the best way to figure out how to concatenate report data into a report URL is to run that report with a sample set of runtime parameters and then copy and paste the URL into a text editor in order to figure out where the varialbes will go.  For example, if I run my "Request history on this item" with item barcode number 0003008200544, the resulting url is:
 
 ~~~HTML
-https://staff.nextkansas.org/cgi-bin/koha/reports/guided_reports.pl?reports=3039&phase=Run+this+report&param_name=Choose+pickup+library%7CLBRANCH&sql_params=%25&param_name=Choose+request+status%7CLHOLDACT&sql_params=%25&param_name=Choose+request+progress%7CLHOLDPROG&sql_params=%25&param_name=Choose+suspended+status%7CLHOLDSUS&sql_params=%25&param_name=Enter+library+card+number+or+a+%25+symbol&sql_params=%25&param_name=Enter+title+biblio+number+or+a+%25+symbol&sql_params=%25&param_name=Enter+item+barcode+number+or+a+%25+symbol&sql_params=0003008200544
+
+/cgi-bin/koha/reports/guided_reports.pl?reports=3039&phase=Run+this+report&param_name=Choose+pickup+library%7CLBRANCH&sql_params=%25&param_name=Choose+request+status%7CLHOLDACT&sql_params=%25&param_name=Choose+request+progress%7CLHOLDPROG&sql_params=%25&param_name=Choose+suspended+status%7CLHOLDSUS&sql_params=%25&param_name=Enter+library+card+number+or+a+%25+symbol&sql_params=%25&param_name=Enter+title+biblio+number+or+a+%25+symbol&sql_params=%25&param_name=Enter+item+barcode+number+or+a+%25+symbol&sql_params=0003008200544
 
 ~~~
 
-and I can see the barcode number as the last 13 digits of that
+and I can see the barcode number as the last 13 digits of that URL so I know that I would want to use everything up to that last
 
 
 
