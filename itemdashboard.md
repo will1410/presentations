@@ -664,7 +664,7 @@ GROUP BY
 
 An important thing to remember here is that I want all of these joins to be LEFT JOIN s.  This way if an item doesn't have a "Lost" status or a "Not for loan" status, etc., you'll still get a result.  If you do a simple JOIN, and there is no result in the sub-query, you won't get any result at all.
 
-## Step 4
+## Step 3
 
 One of the things that would be nice is if the "Lost" and "Withdrawn" information and the lost_on and withdrawn_on dates appeared together instead of in separate columns.  That's why this next sample concatenates damaged and damaged_on; lost and lost_on; and withdrawn and withdrawn_on into three columns instead of six
 
@@ -782,7 +782,7 @@ GROUP BY
 
 This takes the report from 26 columns to 23 columns.  That's still a lot to cut and paste into an e-mail.
 
-## Step
+## Step 4
 
 I know that if I want this report to be useful for library staff, I'm going to have to add some more title information.  The biblio.title field only includes data from the 245$a in the Marc record.  If I want 245$b, $n, $p, $h, and $c I can add those fields directly from the database if I've got my Koha to Marc mapping set up to do that.  Or I can just extract the data from the biblio_metadata table directly from the Marc records.  Since I started working with Koha before some of this information was able to be mapped, I tend to join to the biblio_metadata table and go that route.  This also uses CONCAT_WS which is mentioned in the video at <a href="https://youtu.be/xq9oQ1iP6c0" target="_blank">Concatenating and If Statements in Reports.</a>
 
@@ -910,7 +910,7 @@ GROUP BY
 
 ~~~
 
-## Step
+## Step 5
 
 At this point I also know that, if the item is checked out, I'm going to want to have a quick way to go to the borrower's record.  Unfortunately there isn't anything in the item record that tells me who an item is checke out to.  In order to get information about who an item is checked out to now, I need to link to the issues table, but I only want a result if the item is actually checked out.  This leads us to our first if/then statement of the report.  It also leads to the first HTML link built into the report.
 
@@ -1073,7 +1073,7 @@ Concat(
 
 Creates the link to the borrower's record by combining some HTML with the borrower's ID number while the if/then statement sourrounding it tells the report to that, if there is no borrower number to report a hyphen instead of displaying an HTML link that won't work properly.
 
-## Step
+## Step 6
 
 At this point I'm going to add in data from the branch transfers table so I can tell if the item is in transit between two libraries.
 
@@ -1234,7 +1234,7 @@ GROUP BY
 
 ~~~
 
-## Step
+## Step 7
 
 I also know that at some point I'm going to want to add labels to the data, so I'm going to do a single sample label with :
 
@@ -1408,7 +1408,7 @@ Concat("Link to borrower: ",
 
 ~~~
 
-## Step
+## Step 8
 
 Next I'm going to add in links with labels to other reports.  The important thing here is to have the reports on your system and to update the report numbers from what I have in my system to what you have in your system.  The reports I'm using are:
 
@@ -1657,7 +1657,15 @@ GROUP BY
 
 ~~~
 
-## Step
+## Step 9
+
+Now it's time to make this all look pretty by adding labels to everything.
+
+~~~SQL
+
+
+
+~~~
 
 
 
