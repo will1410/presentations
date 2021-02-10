@@ -566,6 +566,7 @@ FROM
   items JOIN
   biblio ON items.biblionumber = biblio.biblionumber
 
+
 LEFT JOIN
   (SELECT
       authorised_values.category,
@@ -591,6 +592,7 @@ LEFT JOIN
     FROM
       itemtypes) itemtypess ON itemtypess.itemtype = items.itype
 
+
 LEFT JOIN
   (SELECT
       authorised_values.category,
@@ -601,6 +603,7 @@ LEFT JOIN
     WHERE
       authorised_values.category = 'CCODE') ccodes ON ccodes.authorised_value =
       items.ccode
+
 
 LEFT JOIN
   (SELECT
@@ -880,6 +883,7 @@ FROM
     WHERE
       authorised_values.category = 'WITHDRAWN') withdrawns ON
       withdrawns.authorised_value = items.withdrawn
+
 
 JOIN
   biblio_metadata ON biblio_metadata.biblionumber = biblio.biblionumber
@@ -1199,6 +1203,7 @@ FROM
     FROM
       issues) issuesi ON issuesi.itemnumber = items.itemnumber
 
+
 LEFT JOIN
   (SELECT
       branchtransfers.itemnumber,
@@ -1473,7 +1478,7 @@ SELECT
   Concat(losts.lib, ' ', items.itemlost_on) AS LOST,
   Concat(withdrawns.lib, ' ', items.withdrawn_on) AS WITHDRAWN,
 
-  
+
   Concat(
     "In transit from: ",
     If(
