@@ -1554,7 +1554,7 @@ FROM
       issues) issuesi ON issuesi.itemnumber = items.itemnumber
 WHERE
   items.barcode LIKE Concat('%', <<Enter item barcode 0003008200544>>, '%')
-GROUP BY
+<pre> <bold> GROUP BY
   issuesi.date_due,
   notforloans.lib,
   damageds.lib,
@@ -1562,7 +1562,7 @@ GROUP BY
   withdrawns.lib,
   items.itemnumber,
   biblio.biblionumber
-
+</bold> </pre>
 ~~~
 
 ## Step
