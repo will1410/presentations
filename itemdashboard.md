@@ -444,7 +444,7 @@ This report gets me the basic information I want for an item that is still in th
 
 ## Step 2
 
-My next step is to add some sub-queries that will convert some of the codes into descriptions (i.e. instead of item type = "NVIDEO" staff will item type = "Video"; instead of itemlost = 2, staff will see itemlost = "Lost (more than 45 days overdue)."
+My next step is to add some sub-queries that will convert some of the codes into descriptions (i.e. instead of item type = "NVIDNEW" staff will item type = "Video (new)"; instead of itemlost = 2, staff will see itemlost = "Lost (more than 45 days overdue)."
 
 If you don't know how to create sub-queries, please check out the video: <a href="https://youtu.be/iRBEvt4nDbU" target="_blank">SQL: Dates and Subqueries</a>
 
@@ -499,7 +499,7 @@ GROUP BY
 
 ~~~
 
-The two changes involve changing "items.ccode" into "ccodes.lib AS CCODE" and createing the following as a sub-query called "ccodes"
+The two changes involve changing "items.ccode" into "ccodes.lib AS CCODE" and creating the following as a sub-query called "ccodes"
 
 ~~~SQL
 
@@ -514,7 +514,7 @@ SELECT
 
 ~~~
 
-This sub-query gets a list of all of the collection codes in your system.  By left-joining it to the items table, I'm telling the report to grab the collection code description (if there is one) and use it instead of items.ccode which displays the collection code authorised value.  The description is usually a lot easier to read for inexperienced staff than the authorised value.
+This sub-query gets a list of all of the collection codes in your system.  By left-joining it to the items table, I'm telling the report to grab the collection code description (if there is one) and use it instead of items.ccode which displays the collection code authorised value.  The description is usually a lot easier to read for inexperienced staff than the authorised value.  This is especially true of the numeric codes used for items.notforloan, items.itemlost, items.damaged, etc.
 
 ----------
 
@@ -628,7 +628,7 @@ GROUP BY
 
 ~~~
 
-An important thing to remember here is that I want all of these joins to be LEFT JOIN s.  This way if an item doesn't have a "Lost" status, you'll still get a result.  If you do a simple JOIN, and there is no result in the sub-query, you won't get any result at all.
+An important thing to remember here is that I want all of these joins to be LEFT JOIN s.  This way if an item doesn't have a "Lost" status or a "Not for loan" status, etc., you'll still get a result.  If you do a simple JOIN, and there is no result in the sub-query, you won't get any result at all.
 
 ## Step 4
 
@@ -1024,6 +1024,161 @@ Creates the link to the borrower's record by combining some HTML with the borrow
 
 ## Step
 
+At this point I'm going to add in data from the branch transfers table so I can tell if the item is in transit between two libraries.
+
+This involves another sub-query linking out to the branchtransfers table and listing items where branchtransfers.datearrived is null.  Once we have that we can get information about the from and to branches and concatenate them into the results.  Again, this is done through a left-join so that, if the item is not in transit, there will still be a result.  And I'm building it with an if/then statement so that, if the items isn't in transit, there will just be a hyphen instead of empty branchcodes saying "to" and "from."
+
+~~~SQL
+
+SELECT
+  items.homebranch,
+  items.holdingbranch,
+  permanent_locss.lib AS PERM_LOCATION,
+  locss.lib AS LOCATION,
+  itemtypess.description AS ITYPE,
+  ccodes.lib AS CCODE,
+  items.itemcallnumber,
+  biblio.author,
+  Concat_Ws(' ',
+    biblio.title,
+    ExtractValue(biblio_metadata.metadata, '//datafield[@tag="245"]/subfield[@code="h"]'),
+    ExtractValue(biblio_metadata.metadata, '//datafield[@tag="245"]/subfield[@code="b"]'),
+    ExtractValue(biblio_metadata.metadata, '//datafield[@tag="245"]/subfield[@code="n"]'),
+    ExtractValue(biblio_metadata.metadata, '//datafield[@tag="245"]/subfield[@code="p"]'),
+    ExtractValue(biblio_metadata.metadata, '//datafield[@tag="245"]/subfield[@code="c"]')
+  ) AS FULL_TITLE,
+  items.barcode,
+  items.itemnotes,
+  items.itemnotes_nonpublic,
+  items.issues,
+  items.renewals,
+  items.dateaccessioned,
+  items.datelastborrowed,
+  items.datelastseen,
+  items.timestamp,
+  issuesi.date_due,
+  notforloans.lib,
+  Concat(damageds.lib, ' ', items.damaged_on) AS DAMAGED,
+  Concat(losts.lib, ' ', items.itemlost_on) AS LOST,
+  Concat(withdrawns.lib, ' ', items.withdrawn_on) AS WITHDRAWN,
+  If(
+    transfersi.frombranch IS NULL,
+    "-",
+    Concat(transfersi.frombranch, " to ", transfersi.tobranch, " since ", transfersi.datesent)
+  ) AS TRANSFER,
+  If(
+    issuesi.date_due IS NULL, "-",
+    Concat(
+      "<a href='/cgi-bin/koha/circ/circulation.pl?borrowernumber=",
+      issuesi.borrowernumber,
+      "' target='_blank'>go to the borrower's account</a>"
+    )
+  ) AS LINK_TO_BORROWER
+FROM
+  items JOIN
+  biblio ON items.biblionumber = biblio.biblionumber LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOC') permanent_locss ON
+      permanent_locss.authorised_value = items.permanent_location LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOC') locss ON locss.authorised_value =
+      items.location LEFT JOIN
+  (SELECT
+      itemtypes.itemtype,
+      itemtypes.description
+    FROM
+      itemtypes) itemtypess ON itemtypess.itemtype = items.itype LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'CCODE') ccodes ON ccodes.authorised_value =
+      items.ccode LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'NOT_LOAN') notforloans ON
+      notforloans.authorised_value = items.notforloan LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'DAMAGED') damageds ON
+      damageds.authorised_value = items.damaged LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOST') losts ON losts.authorised_value =
+      items.itemlost LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'WITHDRAWN') withdrawns ON
+      withdrawns.authorised_value = items.withdrawn INNER JOIN
+  biblio_metadata ON biblio_metadata.biblionumber = biblio.biblionumber
+  LEFT JOIN
+  (SELECT
+      issues.itemnumber,
+      issues.date_due,
+      issues.borrowernumber
+    FROM
+      issues) issuesi ON issuesi.itemnumber = items.itemnumber LEFT JOIN
+  (SELECT
+      branchtransfers.itemnumber,
+      branchtransfers.frombranch,
+      branchtransfers.datesent,
+      branchtransfers.tobranch,
+      branchtransfers.datearrived
+    FROM
+      branchtransfers
+    WHERE
+      branchtransfers.datearrived IS NULL) transfersi ON transfersi.itemnumber =
+      items.itemnumber
+WHERE
+  items.barcode LIKE Concat('%', <<Enter item barcode 0003008200544>>, '%')
+GROUP BY
+  issuesi.date_due,
+  notforloans.lib,
+  damageds.lib,
+  losts.lib,
+  withdrawns.lib,
+  items.itemnumber,
+  biblio.biblionumber
+
+~~~
+
+## Step
+
 I also know that at some point I'm going to want to add labels to the data, so I'm going to do a single sample with the link that was just created:
 
 ~~~SQL
@@ -1212,7 +1367,222 @@ Generally speaking, the best way to figure out how to concatenate report data in
 
 ~~~
 
-and I can see the barcode number as the last 13 digits of that URL so I know that I would want to use everything up to that last
+and I can see the barcode number as the last 13 digits of that URL so I know that I would want to use everything up to the barcode number and then concatenate in items.barcode where the barcode number falls in this URL.
+
+Anyway, there are plenty of examples to look at in this next version of the report:
+
+~~~SQL
+
+SELECT
+  items.homebranch,
+  items.holdingbranch,
+  permanent_locss.lib AS PERM_LOCATION,
+  locss.lib AS LOCATION,
+  itemtypess.description AS ITYPE,
+  ccodes.lib AS CCODE,
+  items.itemcallnumber,
+  biblio.author,
+  Concat_Ws(' ',
+    biblio.title, ExtractValue(biblio_metadata.metadata,  '//datafield[@tag="245"]/subfield[@code="h"]'),
+    ExtractValue(biblio_metadata.metadata,  '//datafield[@tag="245"]/subfield[@code="b"]'),
+    ExtractValue(biblio_metadata.metadata,  '//datafield[@tag="245"]/subfield[@code="n"]'),
+    ExtractValue(biblio_metadata.metadata,  '//datafield[@tag="245"]/subfield[@code="p"]'),
+    ExtractValue(biblio_metadata.metadata,  '//datafield[@tag="245"]/subfield[@code="c"]')
+  ) AS FULL_TITLE,
+  items.barcode,
+  items.itemnotes,
+  items.itemnotes_nonpublic,
+  items.issues,
+  items.renewals,
+  items.dateaccessioned,
+  items.datelastborrowed,
+  items.datelastseen,
+  items.timestamp,
+  issuesi.date_due,
+  notforloans.lib,
+  Concat(damageds.lib, ' ', items.damaged_on) AS DAMAGED,
+  Concat(losts.lib, ' ', items.itemlost_on) AS LOST,
+  Concat(withdrawns.lib, ' ', items.withdrawn_on) AS WITHDRAWN,
+  Concat(
+    "Link to borrower: ",
+    If(
+      issuesi.date_due IS NULL,
+      "-",
+      Concat(
+        "<a href='/cgi-bin/koha/circ/circulation.pl?borrowernumber=",  
+        issuesi.borrowernumber,
+        "' target='_blank'>go to the borrower's account</a>"
+      )
+    )
+  ) AS LINK_TO_BORROWER,
+  Concat(
+    "Link to title: ",
+    Concat(
+      "<a href='/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
+      biblio.biblionumber,
+      "' target='_blank'>go to the bibliographic record</a>"
+    )
+  ) LINK_TO_TITLE,
+  Concat(
+    "Link to item: ",
+    Concat(
+      "<a href='/cgi-bin/koha/catalogue/moredetail.pl?itemnumber=",
+      items.itemnumber,
+      "&biblionumber=",
+      biblio.biblionumber,
+      "' target='_blank'>go to the item record</a>"
+    )
+  ) AS LINK_TO_ITEM,
+  Concat(
+    "Item circ history: ",
+    Concat(
+      "<a href='/cgi-bin/koha/reports/guided_reports.pl?reports=2785&phase=Run+this+report&param_name=Enter+item+barcode+number&sql_params=",
+      items.barcode,
+      "' target='_blank'>see item circ history</a>"
+    )
+  ) AS CIRC_HISTORY_REPORT,
+  Concat(
+    "Item action log history: ",
+    Concat(
+      "<a href='/cgi-bin/koha/reports/guided_reports.pl?reports=3342&phase=Run+this+report&param_name=Enter+item+number&sql_params=",
+      items.itemnumber,
+      "' target='_blank'>see action log history</a>"
+    )
+  ) AS ACTION_LOG,     
+  Concat(
+    "Item in transit history: ",
+    Concat(
+      "<a href='/cgi-bin/koha/reports/guided_reports.pl?reports=2784&phase=Run+this+report&sql_params=",
+      items.barcode,
+      "' target='_blank'>see item transit history</a>"
+    )
+  ) AS_IN_TRANSIT,
+  Concat(
+    "Request history on this title: ",
+    Concat(
+      "<a href='/cgi-bin/koha/reports/guided_reports.pl?reports=3039&phase=Run+this+report&sql_params=%25&sql_params=%25&sql_params=%25&sql_params=%25&sql_params=%25&sql_params=",
+      biblio.biblionumber,
+      "&sql_params=%25' target='_blank'>see title's request history</a>"
+    )
+  ) AS REQUEST_HISTORY_TITLE,
+  Concat(
+    "Request history on this item: ",
+    Concat(
+      "<a href='/cgi-bin/koha/reports/guided_reports.pl?reports=3039&phase=Run+this+report&sql_params=%25&sql_params=%25&sql_params=%25&sql_params=%25&sql_params=%25&sql_params=%25&sql_params=",
+      items.barcode,
+      "' target='_blank'>see item's request history</a>"
+    )
+  ) AS REQUEST_HISTORY_ITEM
+FROM
+  items JOIN
+  biblio ON items.biblionumber = biblio.biblionumber LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOC') permanent_locss ON
+      permanent_locss.authorised_value = items.permanent_location LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOC') locss ON locss.authorised_value =
+      items.location LEFT JOIN
+  (SELECT
+      itemtypes.itemtype,
+      itemtypes.description
+    FROM
+      itemtypes) itemtypess ON itemtypess.itemtype = items.itype LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'CCODE') ccodes ON ccodes.authorised_value =
+      items.ccode LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'NOT_LOAN') notforloans ON
+      notforloans.authorised_value = items.notforloan LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'DAMAGED') damageds ON
+      damageds.authorised_value = items.damaged LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'LOST') losts ON losts.authorised_value =
+      items.itemlost LEFT JOIN
+  (SELECT
+      authorised_values.category,
+      authorised_values.authorised_value,
+      authorised_values.lib
+    FROM
+      authorised_values
+    WHERE
+      authorised_values.category = 'WITHDRAWN') withdrawns ON
+      withdrawns.authorised_value = items.withdrawn INNER JOIN
+  biblio_metadata ON biblio_metadata.biblionumber = biblio.biblionumber
+  LEFT JOIN
+  (SELECT
+      issues.itemnumber,
+      issues.date_due,
+      issues.borrowernumber
+    FROM
+      issues) issuesi ON issuesi.itemnumber = items.itemnumber
+WHERE
+  items.barcode LIKE Concat('%', <<Enter item barcode 0003008200544>>, '%')
+GROUP BY
+  issuesi.date_due,
+  notforloans.lib,
+  damageds.lib,
+  losts.lib,
+  withdrawns.lib,
+  items.itemnumber,
+  biblio.biblionumber
+
+~~~
+
+## Step
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
