@@ -537,6 +537,7 @@ SELECT
   items.homebranch,
   items.holdingbranch,
 
+/* Switches source of permanent location, location, and item type from codes to descriptions */
 
   permanent_locss.lib AS PERM_LOCATION,
   locss.lib AS LOCATION,
@@ -557,6 +558,9 @@ SELECT
   items.datelastseen,
   items.timestamp,
   items.onloan,
+
+/* Switches source of damaged, lost and withdrawn from codes to descriptions */
+
   notforloans.lib,
   damageds.lib AS DAMAGED,
   items.damaged_on,
@@ -564,10 +568,13 @@ SELECT
   items.itemlost_on,
   withdrawns.lib AS WITHDRAWN,
   items.withdrawn_on
+
+
 FROM
   items JOIN
   biblio ON items.biblionumber = biblio.biblionumber
 
+/* Sub queries to get descriptions for permanent location, location, and item type data */
 
 LEFT JOIN
   (SELECT
@@ -606,6 +613,7 @@ LEFT JOIN
       authorised_values.category = 'CCODE') ccodes ON ccodes.authorised_value =
       items.ccode
 
+/* Sub queries to get descriptions for not-for-loan, damaged, lost, and withdrawn data */
 
 LEFT JOIN
   (SELECT
@@ -686,6 +694,7 @@ SELECT
   items.onloan,
   notforloans.lib,
 
+/* Combines status and status dates into single fields */
 
   CONCAT(damageds.lib, ' ', items.damaged_on) AS DAMAGED,
   CONCAT(losts.lib, ' ', items.itemlost_on) AS LOST,
@@ -791,6 +800,7 @@ SELECT
   items.itemcallnumber,
   biblio.author,
 
+/* Adds 245$b, $n, and $p fields to the title */
 
   Concat_Ws(' ',
     biblio.title,
@@ -886,6 +896,7 @@ FROM
       authorised_values.category = 'WITHDRAWN') withdrawns ON
       withdrawns.authorised_value = items.withdrawn
 
+/* Left joins biblio_metadata to enable extraction of Marc fields */
 
 JOIN
   biblio_metadata ON biblio_metadata.biblionumber = biblio.biblionumber
@@ -894,10 +905,6 @@ JOIN
 WHERE
   items.barcode LIKE Concat('%', <<Enter item barcode>>, '%')
 GROUP BY
-  notforloans.lib,
-  damageds.lib,
-  losts.lib,
-  withdrawns.lib,
   items.itemnumber,
   biblio.biblionumber
 
@@ -947,6 +954,7 @@ SELECT
   Concat(losts.lib, ' ', items.itemlost_on) AS LOST,
   Concat(withdrawns.lib, ' ', items.withdrawn_on) AS WITHDRAWN,
 
+/* Creates a link to the bibliographic record  */
 
   If(
     issuesi.date_due IS NULL,
@@ -1032,6 +1040,7 @@ FROM
       withdrawns.authorised_value = items.withdrawn INNER JOIN
   biblio_metadata ON biblio_metadata.biblionumber = biblio.biblionumber
 
+/* Links items to the issues table so we can get current borrower information if the item is checked out */
 
 LEFT JOIN
   (SELECT
@@ -1045,11 +1054,6 @@ LEFT JOIN
 WHERE
   items.barcode LIKE Concat('%', <<Enter item barcode>>, '%')
 GROUP BY
-  issuesi.date_due,
-  notforloans.lib,
-  damageds.lib,
-  losts.lib,
-  withdrawns.lib,
   items.itemnumber,
   biblio.biblionumber
 
@@ -1109,6 +1113,7 @@ SELECT
   Concat(losts.lib, ' ', items.itemlost_on) AS LOST,
   Concat(withdrawns.lib, ' ', items.withdrawn_on) AS WITHDRAWN,
 
+/* Shows if the item is in transit between libraries */
 
   If(
     transfersi.frombranch IS NULL,
@@ -1205,6 +1210,7 @@ FROM
     FROM
       issues) issuesi ON issuesi.itemnumber = items.itemnumber
 
+/* Sub query to get data from the issues table */
 
 LEFT JOIN
   (SELECT
@@ -1223,11 +1229,6 @@ LEFT JOIN
 WHERE
   items.barcode LIKE Concat('%', <<Enter item barcode 0003008200544>>, '%')
 GROUP BY
-  issuesi.date_due,
-  notforloans.lib,
-  damageds.lib,
-  losts.lib,
-  withdrawns.lib,
   items.itemnumber,
   biblio.biblionumber
 
@@ -1276,6 +1277,7 @@ SELECT
     Concat(transfersi.frombranch, " to ", transfersi.tobranch, " since ", transfersi.datesent)
   ) AS TRANSFER,
 
+/* Adds a label to the link to the borrower's account */
 
   Concat("Link to borrower: ",
     If(
@@ -1383,11 +1385,6 @@ FROM
 WHERE
   items.barcode LIKE Concat('%', <<Enter item barcode>>, '%')
 GROUP BY
-  issuesi.date_due,
-  notforloans.lib,
-  damageds.lib,
-  losts.lib,
-  withdrawns.lib,
   items.itemnumber,
   biblio.biblionumber
 
@@ -1480,6 +1477,7 @@ SELECT
   Concat(losts.lib, ' ', items.itemlost_on) AS LOST,
   Concat(withdrawns.lib, ' ', items.withdrawn_on) AS WITHDRAWN,
 
+/* Adds a whole bunch of links with labels */
 
   Concat(
     "In transit from: ",
@@ -1653,15 +1651,10 @@ FROM
       items.itemnumber
 WHERE
   items.barcode LIKE Concat('%', <<Enter item barcode 0003008200544>>, '%')
-<pre> <bold> GROUP BY
-  issuesi.date_due,
-  notforloans.lib,
-  damageds.lib,
-  losts.lib,
-  withdrawns.lib,
+GROUP BY
   items.itemnumber,
   biblio.biblionumber
-</bold> </pre>
+
 ~~~
 
 ## Step
