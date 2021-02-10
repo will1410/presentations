@@ -459,6 +459,7 @@ SELECT
   items.location,
   items.itype,
 
+/* Changes items.ccode to ccodes.lib */
 
   ccodes.lib AS CCODE,
 
@@ -487,6 +488,7 @@ FROM
   items JOIN
   biblio ON items.biblionumber = biblio.biblionumber
 
+/* Sub-querie called "ccodes" - left joined to items.ccode */
 
   LEFT JOIN
     (SELECT
