@@ -10,7 +10,7 @@ This tutorial was created for a workshop at the 2021 koha-US hybrid conference.
 
 ## Very, very basic jQuery
 
-[Very, very basic jQuery](very.very.basic.jQuery.md)
+[Very, very basic jQuery for Koha](very.very.basic.jQuery.md)
 
 The link above goes with the presentation/workshop I did on May 21, 2020.  You can view this presentation on YouTube at [Very, very basic jQuery Video](https://youtu.be/SqMqM6iRgvg){:target="_blank"}
 
