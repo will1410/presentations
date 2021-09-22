@@ -45,7 +45,7 @@ Every custom report you create in Koha is going to start with the word "SELECT";
 
 To stretch the "Librarian way of thinking about it" analogy, this query is asking the question "What information is in table1?"
 
-~~~ SQL
+~~~SQL
 SELECT
   *
 FROM
