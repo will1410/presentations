@@ -2,11 +2,15 @@
 
 Presentations by George H. Williams
 
+## Very very basic SQL for Koha
+
+[Very very basic SQL for Koha](very.very.basic.sql.md)
+
 ## Item dashboard
 
 [Item dashboard](itemdashboard.md)
 
-This presentation is a detailed how-to for how to make the "Item dashboard" report.
+This presentation is a detailed how-to for how to make the "Item dashboard" report.  You can see a video explaining this report at [https://youtu.be/eY-oGqIQXGA](https://youtu.be/eY-oGqIQXGA)
 
 <br /><br />
 
