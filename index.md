@@ -6,11 +6,21 @@ Presentations by George H. Williams
 
 [Very very basic SQL for Koha](very.very.basic.sql.md)
 
+This tutorial was created for a workshop at the 2021 koha-US hybrid conference.
+
+## Very, very basic jQuery
+
+[Very, very basic jQuery](very.very.basic.jQuery.md)
+
+The link above goes with the presentation/workshop I did on May 21, 2020.  You can view this presentation on YouTube at [Very, very basic jQuery Video](https://youtu.be/SqMqM6iRgvg){:target="_blank"}
+
+These notes will also be the basis for the same workshop being done at the 2021 koha-US hybrid conference.
+
 ## Item dashboard
 
 [Item dashboard](itemdashboard.md)
 
-This presentation is a detailed how-to for how to make the "Item dashboard" report.  You can see a video explaining this report at [https://youtu.be/eY-oGqIQXGA](https://youtu.be/eY-oGqIQXGA)
+This presentation is a detailed how-to for how to make the "Item dashboard" report.  You can see a koha-US Teriffic Every Other Thursday training video explaining this report at [https://youtu.be/eY-oGqIQXGA](https://youtu.be/eY-oGqIQXGA)
 
 <br /><br />
 
