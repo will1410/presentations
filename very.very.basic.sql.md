@@ -28,12 +28,41 @@ And LinkedIn Learning has a full "SQL for Non-Programmers" course at [https://ww
 
 There is a good cheat sheet at [https://learnsql.com/blog/standard-sql-functions-cheat-sheet/standard-sql-functions-cheat-sheet-letter.pdf](https://learnsql.com/blog/standard-sql-functions-cheat-sheet/standard-sql-functions-cheat-sheet-letter.pdf) but it is not Koha specific
 
-## The basic components of a custom report in koha
+## __*Special note*__
 
-Every custom report you create in Koha is going to start with the word "SELECT"
+The custom report interface in Koha is designed only to read data from Koha -- you will not be able to use any SQL commands that create, alter, or delete any data from Koha's reports module.  For this reason you can't use any of these words when creating an SQL report in Koha:
 
-The custom report interface in Koha is designed
+- UPDATE
+- DELETE
+- DROP
+- INSERT
+- SHOW
+- CREATE
 
-~~~ JavaScript
-$ ;
+## The most basic report possible
+
+Every custom report you create in Koha is going to start with the word "SELECT"; followed by an asterix; followed by the word "FROM"; followed by the table name.
+
+To stretch the "Librarian way of thinking about it" analogy, this query is asking the question "What information is in table1?"
+
+~~~ SQL
+SELECT
+  *
+FROM
+  table1
 ~~~
+
+## An actual sample that will work in koha
+
+This is just a sample.  It's not a very useful report.
+
+~~~sql
+SELECT
+  *
+FROM
+  items
+~~~
+
+## A slightly more complex report
+
+This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
