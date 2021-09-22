@@ -45,7 +45,7 @@ Every custom report you create in Koha is going to start with the word "SELECT";
 
 To stretch the "Librarian way of thinking about it" analogy, this query is asking the question "What information is in this table?"
 
-~~~SQL
+~~~sql
 SELECT
   *
 FROM
@@ -67,7 +67,7 @@ FROM
 
 This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
 
-~~~SQL
+~~~sql
 SELECT
   tablename.field1,
   tablename.field2,
@@ -80,7 +80,7 @@ FROM
 
 This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
 
-~~~SQL
+~~~sql
 SELECT
   items.itemnumber,
   items.biblionumber,
@@ -93,7 +93,7 @@ FROM
 
 We can add "WHERE tablename.fieldname = 'X'"
 
-~~~SQL
+~~~sql
 SELECT
   tablename.field1,
   tablename.field2,
@@ -108,7 +108,7 @@ WHERE
 
 This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
 
-~~~SQL
+~~~sql
 SELECT
   items.itemnumber,
   items.biblionumber,
