@@ -41,18 +41,18 @@ The custom report interface in Koha is designed only to read data from Koha -- y
 
 ## The most basic report possible
 
-Every custom report you create in Koha is going to start with the word "SELECT"; followed by an asterix; followed by the word "FROM"; followed by the table name.
+Every custom report you create in Koha is going to start with the word "SELECT"; followed by an asterix (wildcard for "all"); followed by the word "FROM"; followed by the table name.
 
-To stretch the "Librarian way of thinking about it" analogy, this query is asking the question "What information is in table1?"
+To stretch the "Librarian way of thinking about it" analogy, this query is asking the question "What information is in this table?"
 
 ~~~SQL
 SELECT
   *
 FROM
-  table1
+  tablename
 ~~~
 
-## An actual sample that will work in koha
+### An actual sample that will work in Koha
 
 This is just a sample.  It's not a very useful report.
 
@@ -66,3 +66,53 @@ FROM
 ## A slightly more complex report
 
 This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
+
+~~~SQL
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+~~~
+
+### An actual sample that will work in Koha
+
+This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
+
+~~~SQL
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+~~~
+
+## Adding constraints
+
+We can add "WHERE tablename.fieldname = 'X'"
+
+~~~SQL
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+WHERE
+  tablename.field1 = "X"
+~~~
+
+### An actual sample that will work in Koha
+
+This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
+
+~~~SQL
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+~~~
