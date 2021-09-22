@@ -2,7 +2,7 @@
 
 Presentations by George H. Williams
 
-## Very very basic SQL for Koha
+## Very very basic SQL for Koha Reports
 
 [Very very basic SQL for Koha](very.very.basic.sql.md)
 
