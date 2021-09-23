@@ -144,15 +144,15 @@ WHERE
   items.itemnumber = 1
 ~~~
 
-## Different types of constraints
+## Constraints besides equals
 
 There are different types of basic constraints:
 
 - = (exaxt match)
 - < (less than)
 - \> (greater than)
-- \>= (greater than or equal)
 - <= (less than or equal)
+- \>= (greater than or equal)
 - <> (does not equal)
 - \!= (does not equal)
 - BETWEEN x AND y
@@ -169,7 +169,7 @@ WHERE
   tablename.field1 = "X"
 ~~~
 
-### An actual sample that will work in Koha
+### Actual samples that will work in Koha
 
 This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
 
@@ -181,5 +181,71 @@ SELECT
 FROM
   items
 WHERE
-  items.itemnumber = 1
+  items.itemnumber < 100
+~~~
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE
+  items.itemnumber > 100
+~~~
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE
+  items.itemnumber <= 100
+~~~
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE
+  items.itemnumber >= 100
+~~~
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE
+  items.itemnumber <> 100
+~~~
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE
+  items.itemnumber != 100
+~~~
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE
+  items.itemnumber BETWEEN 100 AND 150
 ~~~
