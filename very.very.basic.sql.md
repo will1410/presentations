@@ -152,7 +152,7 @@ WHERE
 
 ## Constraints besides equals
 
-There are different types of basic constraints:
+There are different types of basic constraints when working with numeric values:
 
 - = (exaxt match)
 - < (less than)
@@ -269,20 +269,39 @@ WHERE
   items.itemnumber BETWEEN 100 AND 150
 ~~~
 
+## Constraint is not
+
+You can also use WHERE NOT to constrain the results to anything except a specific match.  This works a lot like WHERE <> or WHERE !=
+
+~~~sql
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+WHERE NOT
+  tablename.field1 = "X"
+~~~
+
+### Actual samples that will work in Koha
+
+#### Sample 011
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE NOT
+  items.itemnumber = 100
+~~~
+
 ## Adding multiple constraints
 
-We can add "WHERE tablename.fieldname = 'X'"
-
-This updates the question to "What are // field1, field2, and field3 // in // this table // if one specific field is 'X'?"
-
-- SELECT = What is
-- field1, field2, field3 = these fields
-- FROM = in
-- tablename = this table
-- WHERE - IF
-- tablename.field1 = "X"
-
-#### Sample 003
+We can also add multiple constraints using AND or OR
 
 ~~~sql
 SELECT
@@ -292,5 +311,104 @@ SELECT
 FROM
   tablename
 WHERE
-  tablename.field1 = "X"
+  tablename.field1 = "X" AND
+  tablename.field2 = "Y"
+~~~
+
+#### OR
+
+~~~sql
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+WHERE
+  tablename.field1 = "X" OR
+  tablename.field2 = "Y"
+~~~
+
+#### OR
+
+~~~sql
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+WHERE
+  tablename.field1 = "X" OR
+  tablename.field2 = "Y"
+~~~
+
+#### OR
+
+~~~sql
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+WHERE
+  tablename.field1 = "X" AND NOT
+  tablename.field2 = "Y"
+~~~
+
+~~~sql
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+WHERE
+  tablename.field1 = "X" OR NOT
+  tablename.field2 = "Y"
+~~~
+
+### Actual samples that will work in Koha
+
+#### Sample 012
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE NOT
+  items.itemnumber = 100 OR
+  items.biblionumber = 50
+~~~
+
+#### Sample 013
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE NOT
+  items.itemnumber = 100 AND
+  items.biblionumber = 50
+~~~
+
+#### Sample 01
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE NOT
+  items.itemnumber = 100 AND NOT
+  items.biblionumber = 50
 ~~~
