@@ -150,12 +150,12 @@ There are different types of constraints:
 
 - = (exaxt match)
 - < (less than)
-- > (greater than)
-- >= (greater than or equal)
+- \> (greater than)
+- \>= (greater than or equal)
 - <= (less than or equal)
 - <> (does not equal)
 - != (does not equal)
-- 
+-
 -
 -
 
