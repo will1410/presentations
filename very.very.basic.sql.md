@@ -6,7 +6,9 @@
 
 SQL stands for Structured Query Language.  
 
-A librarian way of thinking about it is that SQL is a controlled vocabulary for asking the database questions.
+One way of thinking about it is that SQL is a controlled vocabulary for asking the database questions.
+
+A reference librarian analogy would be that SQL is the language you use to ask reference questions to a database.
 
 ## Q: What does SQL have to do with Koha?
 
@@ -43,7 +45,12 @@ The custom report interface in Koha is designed only to read data from Koha -- y
 
 Every custom report you create in Koha is going to start with the word "SELECT"; followed by an asterix (wildcard for "all"); followed by the word "FROM"; followed by the table name.
 
-To stretch the "Librarian way of thinking about it" analogy, this query is asking the question "What information is in this table?"
+To stretch the reference librarian analogy further, this query is asking the question "What is all of the information in this table?"
+
+SELECT = What is
+\* = all of the information
+FROM = in
+tablename = this table
 
 ~~~sql
 SELECT
@@ -56,6 +63,8 @@ FROM
 
 This is just a sample.  It's not a very useful report.
 
+This question is "What is all of the information in the *items* table"
+
 ~~~sql
 SELECT
   *
@@ -65,7 +74,7 @@ FROM
 
 ## A slightly more complex report
 
-This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
+This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildcard.
 
 ~~~sql
 SELECT
