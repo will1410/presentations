@@ -45,7 +45,7 @@ The custom report interface in Koha is designed only to read data from Koha -- y
 
 Every custom report you create in Koha is going to start with the word "SELECT"; followed by an asterix (wildcard for "all"); followed by the word "FROM"; followed by the table name.
 
-To stretch the reference librarian analogy further, this query is asking the question "What is all of the information in this table?"
+To stretch the reference librarian analogy further, this query is asking the question "What is // all of the information // in // this table?"
 
 - SELECT = What is
 - \* = all of the information
@@ -76,6 +76,13 @@ FROM
 
 This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildcard.
 
+To use the reference librarian analogy again, this query is asking the question "What are // field1, field2, and field3 // in // this table?"
+
+- SELECT = What is
+- field1, field2, field3 = these fields
+- FROM = in
+- tablename = this table
+
 ~~~sql
 SELECT
   tablename.field1,
@@ -102,6 +109,15 @@ FROM
 
 We can add "WHERE tablename.fieldname = 'X'"
 
+This updates the question to "What are // field1, field2, and field3 // in // this table // if one specific field is 'X'?"
+
+- SELECT = What is
+- field1, field2, field3 = these fields
+- FROM = in
+- tablename = this table
+- WHERE - IF
+- tablename.field1 = "X"
+
 ~~~sql
 SELECT
   tablename.field1,
@@ -124,4 +140,47 @@ SELECT
   items.barcode
 FROM
   items
+WHERE
+  items.itemnumber = 1
+~~~
+
+## Different types of constraints
+
+There are different types of constraints:
+
+- = (exaxt match)
+- < (less than)
+- > (greater than)
+- >= (greater than or equal)
+- <= (less than or equal)
+- <> (does not equal)
+- != (does not equal)
+- 
+-
+-
+
+~~~sql
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+WHERE
+  tablename.field1 = "X"
+~~~
+
+### An actual sample that will work in Koha
+
+This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE
+  items.itemnumber = 1
 ~~~
