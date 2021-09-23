@@ -47,10 +47,10 @@ Every custom report you create in Koha is going to start with the word "SELECT";
 
 To stretch the reference librarian analogy further, this query is asking the question "What is all of the information in this table?"
 
-SELECT = What is
-\* = all of the information
-FROM = in
-tablename = this table
+- SELECT = What is
+- \* = all of the information
+- FROM = in
+- tablename = this table
 
 ~~~sql
 SELECT
