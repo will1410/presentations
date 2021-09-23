@@ -595,7 +595,20 @@ For the purposes of Koha, you really only need to know JOIN and LEFT JOIN
 
 This query asks the question "Show me all of the information // in table1.field1 and table2.field1 // in this table when it's joined to this other table // even if there's no connection between the tables?"
 
-#### Sample 025 types of joins
+#### Sample 025 LEFT JOIN
+
+~~~sql
+SELECT
+  branches.branchcode,
+  Count(items.itemnumber) AS Count_itemnumber
+FROM
+  items LEFT JOIN
+  branches ON branches.branchcode = items.homebranch
+GROUP BY
+  branches.branchcode
+~~~
+
+#### Sample 026 LEFT JOIN
 
 ~~~sql
 SELECT
