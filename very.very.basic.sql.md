@@ -339,20 +339,6 @@ SELECT
 FROM
   tablename
 WHERE
-  tablename.field1 = "X" OR
-  tablename.field2 = "Y"
-~~~
-
-#### OR
-
-~~~sql
-SELECT
-  tablename.field1,
-  tablename.field2,
-  tablename.field3
-FROM
-  tablename
-WHERE
   tablename.field1 = "X" AND NOT
   tablename.field2 = "Y"
 ~~~
@@ -381,7 +367,7 @@ SELECT
 FROM
   items
 WHERE NOT
-  items.itemnumber = 100 OR
+  items.itemnumber = 100 AND
   items.biblionumber = 50
 ~~~
 
@@ -395,11 +381,11 @@ SELECT
 FROM
   items
 WHERE NOT
-  items.itemnumber = 100 AND
+  items.itemnumber = 100 OR
   items.biblionumber = 50
 ~~~
 
-#### Sample 01
+#### Sample 014
 
 ~~~sql
 SELECT
@@ -410,5 +396,19 @@ FROM
   items
 WHERE NOT
   items.itemnumber = 100 AND NOT
+  items.biblionumber = 50
+~~~
+
+#### Sample 015
+
+~~~sql
+SELECT
+  items.itemnumber,
+  items.biblionumber,
+  items.barcode
+FROM
+  items
+WHERE NOT
+  items.itemnumber = 100 OR NOT
   items.biblionumber = 50
 ~~~
