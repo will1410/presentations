@@ -583,13 +583,13 @@ FROM
 
 ## Joining tables
 
-There are several different types of JOIN in Koha:
+There are several different types of JOINs you can use in SQL:
 
-JOIN
-INNER JOIN
-LEFT JOIN
-RIGHT JOIN
-FULL OUTER JOIN
+- JOIN
+- INNER JOIN
+- LEFT JOIN
+- RIGHT JOIN
+- FULL OUTER JOIN
 
 For the purposes of Koha, you really only need to know JOIN and LEFT JOIN
 
