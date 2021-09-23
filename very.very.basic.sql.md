@@ -146,7 +146,7 @@ WHERE
 
 ## Different types of constraints
 
-There are different types of constraints:
+There are different types of basic constraints:
 
 - = (exaxt match)
 - < (less than)
@@ -154,10 +154,9 @@ There are different types of constraints:
 - \>= (greater than or equal)
 - <= (less than or equal)
 - <> (does not equal)
-- != (does not equal)
--
--
--
+- \!= (does not equal)
+- BETWEEN x AND y
+
 
 ~~~sql
 SELECT
