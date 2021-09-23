@@ -65,6 +65,8 @@ This is just a sample.  It's not a very useful report.
 
 This question is "What is all of the information in the *items* table"
 
+#### Sample 001
+
 ~~~sql
 SELECT
   *
@@ -94,7 +96,9 @@ FROM
 
 ### An actual sample that will work in Koha
 
-This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
+This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildcard.
+
+#### Sample 002
 
 ~~~sql
 SELECT
@@ -117,6 +121,8 @@ This updates the question to "What are // field1, field2, and field3 // in // th
 - tablename = this table
 - WHERE - IF
 - tablename.field1 = "X"
+
+#### Sample 003
 
 ~~~sql
 SELECT
@@ -171,7 +177,9 @@ WHERE
 
 ### Actual samples that will work in Koha
 
-This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
+This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildcard.
+
+#### Sample 004
 
 ~~~sql
 SELECT
@@ -184,6 +192,8 @@ WHERE
   items.itemnumber < 100
 ~~~
 
+#### Sample 005
+
 ~~~sql
 SELECT
   items.itemnumber,
@@ -194,6 +204,8 @@ FROM
 WHERE
   items.itemnumber > 100
 ~~~
+
+#### Sample 006
 
 ~~~sql
 SELECT
@@ -206,6 +218,8 @@ WHERE
   items.itemnumber <= 100
 ~~~
 
+#### Sample 007
+
 ~~~sql
 SELECT
   items.itemnumber,
@@ -216,6 +230,8 @@ FROM
 WHERE
   items.itemnumber >= 100
 ~~~
+
+#### Sample 008
 
 ~~~sql
 SELECT
@@ -228,6 +244,8 @@ WHERE
   items.itemnumber <> 100
 ~~~
 
+#### Sample 009
+
 ~~~sql
 SELECT
   items.itemnumber,
@@ -238,6 +256,7 @@ FROM
 WHERE
   items.itemnumber != 100
 ~~~
+#### Sample 010
 
 ~~~sql
 SELECT
