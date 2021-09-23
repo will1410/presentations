@@ -122,8 +122,6 @@ This updates the question to "What are // field1, field2, and field3 // in // th
 - WHERE - IF
 - tablename.field1 = "X"
 
-#### Sample 003
-
 ~~~sql
 SELECT
   tablename.field1,
@@ -137,7 +135,9 @@ WHERE
 
 ### An actual sample that will work in Koha
 
-This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildaard.
+This report begins and ends with a "SELECT" and a "FROM tablename" but this time we're going to choose the fields we want instead of selecting them all with a wildcard.
+
+#### Sample 003
 
 ~~~sql
 SELECT
@@ -267,4 +267,30 @@ FROM
   items
 WHERE
   items.itemnumber BETWEEN 100 AND 150
+~~~
+
+## Adding multiple constraints
+
+We can add "WHERE tablename.fieldname = 'X'"
+
+This updates the question to "What are // field1, field2, and field3 // in // this table // if one specific field is 'X'?"
+
+- SELECT = What is
+- field1, field2, field3 = these fields
+- FROM = in
+- tablename = this table
+- WHERE - IF
+- tablename.field1 = "X"
+
+#### Sample 003
+
+~~~sql
+SELECT
+  tablename.field1,
+  tablename.field2,
+  tablename.field3
+FROM
+  tablename
+WHERE
+  tablename.field1 = "X"
 ~~~
